@@ -1,0 +1,57 @@
+mark -> akinator == for kineth 
+
+like akinator if percentage of person is above 90% certainty then start asking personal question 
+randomize questions each time program is started 
+
+do they have a dog/s?
+
+is their primary residence within cebu city?
+
+subjective question //do you consider them athletic?
+
+did they graduate from USC for senior high? 
+
+is this person male?
+
+do they work part time?
+
+subjective question// do they use social alot? 
+
+can the person play a musical instrument?
+
+is the persons birthday before june the 15?
+
+does the person speak more than 2  languages fluently?
+
+Does the person commute more than 30 minutes to campus each way?
+
+is the person able to drive a car on their own?
+
+Do they have siblings?
+
+Is this person left-handed?
+
+Do they wear glasses or contact lenses?
+
+Can they swim confidently in deep water?
+
+Do they live with their parents?
+
+Does the person prefer coffee over tea?
+
+Is their phone an iPhone?
+
+//subject to change subjective questions may or may not be put
+//again make the last question a personal question that freak out the people like woahh
+// so make 2 personal questions 
+
+
+
+google form for the questions editors
+https://docs.google.com/forms/d/1fORSoVx_VbZffuZtbPqnF6I4PsyDnU4CY6xuyfwtLTI/edit
+
+google form for the answers 
+https://forms.gle/zrg3CMd76UWeDhzA8
+
+sheets
+https://docs.google.com/spreadsheets/d/1xbteKOYX2APLAOBG5j_nvZ8KTU9EKGjbrDGF7inJyXA/edit?resourcekey=&gid=217341587#gid=217341587
