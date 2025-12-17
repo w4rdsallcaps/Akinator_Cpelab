@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Alex",
+    "attributes": {
+      "male": true,
+      "glasses": false,
+      "gamer": true,
+      "pet": true
+    }
+  },
+  {
+    "name": "Bea",
+    "attributes": {
+      "male": false,
+      "glasses": true,
+      "gamer": false,
+      "pet": null
+    }
+  }
+]
