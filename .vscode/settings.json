@@ -10,6 +10,9 @@
             "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx.swing.jar",
             "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx.web.jar",
             "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx-swt.jar"
+        ],
+        "exclude": [
+            "c:\\Users\\w4rds\\Desktop\\javafx-sdk-25.0.1\\lib\\jdk.jsobject.jar"
         ]
     }
 }
