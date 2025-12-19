@@ -1,18 +1,20 @@
-
 import java.util.Map;
+import java.util.HashMap;
 
 public class Person {
-    String name;
-    Map<String, Boolean> attributes;
 
+    public String name;
+    public Map<String, Boolean> attributes;
+
+    // REQUIRED constructor
     public Person(String name, Map<String, Boolean> attributes) {
         this.name = name;
         this.attributes = attributes;
     }
 
-    public boolean matches(String key, Boolean answer) {
-        Boolean value = attributes.get(key);
-        if (answer == null || value == null) return true;
-        return value.equals(answer);
+    // Optional: empty constructor (safe to keep)
+    public Person() {
+        this.name = "";
+        this.attributes = new HashMap<>();
     }
 }
