@@ -1,6 +1,15 @@
 {
-  "java.project.referencedLibraries": [
-    "lib/**/*.jar",
-    "c:\\Users\\w4rds\\Downloads\\gson-2.10.1-javadoc.jar"
-  ]
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx.base.jar",
+            "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx.controls.jar",
+            "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx.fxml.jar",
+            "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx.graphics.jar",
+            "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx.media.jar",
+            "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx.swing.jar",
+            "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx.web.jar",
+            "c:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\\javafx-swt.jar"
+        ]
+    }
 }
