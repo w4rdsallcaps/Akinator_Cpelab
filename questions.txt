@@ -1,0 +1,18 @@
+dog|Do you have a dog?
+residence_cebu|Is your primary residence within Cebu City?
+outdoor_sports|Do you currently do outdoor sports (e.g., basketball, jogging & soccer)?
+graduated_usc|Did you graduate from USC for senior high?
+male_genitals|Do you have genitals of the male kind?
+has_job|Do you have a part time/fulltime job?
+social_media|Do you use social media a lot?
+musical_instrument|Can you play a musical instrument?
+birthday_before_june15|Is your birthday on or before June 15th?
+speak_2plus_languages|Honestly answer: can you speak more than 2 languages fluently?
+commute_30plus|Do you commute more than 30 minutes to campus each day?
+can_drive|Are you able to drive a car on your own?
+siblings|Do you have siblings?
+live_with_parents|Do you live with your parents right now?
+can_swim|Can you swim confidently in deep water?
+glasses|Do you wear glasses or contact lenses?
+left_handed|Are you left handed?
+owns_iphone|Do you own an iPhone?
