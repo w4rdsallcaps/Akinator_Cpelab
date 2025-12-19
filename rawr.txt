@@ -55,3 +55,6 @@ https://forms.gle/zrg3CMd76UWeDhzA8
 
 sheets
 https://docs.google.com/spreadsheets/d/1xbteKOYX2APLAOBG5j_nvZ8KTU9EKGjbrDGF7inJyXA/edit?resourcekey=&gid=217341587#gid=217341587
+
+
+if confidence is just 0% then make it say idk literaly 
