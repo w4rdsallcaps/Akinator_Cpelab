@@ -1,6 +1,0 @@
-[
-  { "key": "male", "text": "Is your friend male?" },
-  { "key": "glasses", "text": "Does your friend wear glasses?" },
-  { "key": "gamer", "text": "Does your friend play video games?" },
-  { "key": "pet", "text": "Does your friend have a pet?" }
-]
