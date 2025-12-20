@@ -1,54 +1,102 @@
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 
 public class App extends Application {
 
     private Stage stage;
-
     private List<Person> people;
     private List<Question> questions;
     private AkinatorEngine engine;
-
     private Question currentQuestion;
 
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
-
         people = DataLoader.loadPeople("people.txt");
         questions = DataLoader.loadQuestions("questions.txt");
         engine = new AkinatorEngine(people, questions);
 
-        stage.setTitle("Mini Akinator");
+        stage.setTitle("Markinator");
         showMenu();
         stage.show();
+    }
+
+    /* =======================
+            UI HELPERS
+       ======================= */
+    
+    private StackPane createBaseLayout() {
+        StackPane root = new StackPane();
+        try {
+            URL bgUrl = getClass().getResource("/background.png");
+            if (bgUrl != null) {
+                root.setStyle("-fx-background-image: url('" + bgUrl.toExternalForm() + "'); " +
+                              "-fx-background-size: cover; -fx-background-position: center;");
+            } else {
+                root.setStyle("-fx-background-color: #330000;"); 
+            }
+        } catch (Exception e) {
+            root.setStyle("-fx-background-color: black;");
+        }
+        return root;
+    }
+
+    private void styleButton(Button b) {
+        b.setStyle("-fx-background-color: white; -fx-background-radius: 25; -fx-border-color: #555; " +
+                   "-fx-border-radius: 25; -fx-min-width: 250; -fx-min-height: 45; " +
+                   "-fx-font-size: 16px; -fx-font-weight: bold; -fx-cursor: hand;");
+        
+        b.setOnMouseEntered(e -> b.setStyle(b.getStyle() + "-fx-background-color: #eeeeee;"));
+        b.setOnMouseExited(e -> b.setStyle(b.getStyle() + "-fx-background-color: white;"));
     }
 
     /* =======================
             MENU SCENE
        ======================= */
     private void showMenu() {
-        Label title = new Label("MINI AKINATOR");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        StackPane root = createBaseLayout();
+        VBox content = new VBox(20);
+        content.setAlignment(Pos.CENTER);
+
+        Label title = new Label("MARKINATOR");
+        title.setStyle("-fx-font-size: 50px; -fx-font-weight: bold; -fx-text-fill: gold; " +
+                       "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
+
+        // The only Genie image remains here on the start menu
+        ImageView menuGenie = new ImageView();
+        try {
+            URL genieUrl = getClass().getResource("/genie.png");
+            if (genieUrl != null) {
+                menuGenie.setImage(new Image(genieUrl.toExternalForm()));
+                menuGenie.setFitHeight(250);
+                menuGenie.setPreserveRatio(true);
+            }
+        } catch (Exception e) {}
 
         Button startBtn = new Button("Start Game");
         Button addBtn = new Button("Add Character");
         Button exitBtn = new Button("Exit");
 
+        styleButton(startBtn);
+        styleButton(addBtn);
+        styleButton(exitBtn);
+
         startBtn.setOnAction(e -> startGame());
         addBtn.setOnAction(e -> showAddCharacter());
         exitBtn.setOnAction(e -> stage.close());
 
-        VBox root = new VBox(15, title, startBtn, addBtn, exitBtn);
-        root.setStyle("-fx-padding: 30; -fx-alignment: center;");
-
-        stage.setScene(new Scene(root, 400, 300));
+        content.getChildren().addAll(title, menuGenie, startBtn, addBtn, exitBtn);
+        root.getChildren().add(content);
+        stage.setScene(new Scene(root, 800, 650));
     }
 
     /* =======================
@@ -56,141 +104,168 @@ public class App extends Application {
        ======================= */
     private void startGame() {
         engine.reset();
+        StackPane root = createBaseLayout();
+        VBox content = new VBox(20);
+        content.setAlignment(Pos.CENTER);
 
         Label questionLabel = new Label();
-        questionLabel.setStyle("-fx-font-size: 16px;");
+        questionLabel.setWrapText(true);
+        questionLabel.setMaxWidth(400);
+        questionLabel.setStyle("-fx-background-color: white; -fx-background-radius: 20; " +
+                               "-fx-padding: 30; -fx-font-size: 20px; -fx-text-alignment: center;");
 
         Label guessLabel = new Label();
+        guessLabel.setStyle("-fx-text-fill: white; -fx-font-style: italic; -fx-font-size: 14px;");
 
-        Button yesBtn = new Button("YES");
-        Button noBtn = new Button("NO");
-        Button idkBtn = new Button("I DON'T KNOW");
+        Button yesBtn = new Button("Yes");
+        Button noBtn = new Button("No");
+        Button idkBtn = new Button("I Don't Know");
 
-        yesBtn.setOnAction(e -> answer(true, questionLabel, guessLabel));
-        noBtn.setOnAction(e -> answer(false, questionLabel, guessLabel));
-        idkBtn.setOnAction(e -> answer(null, questionLabel, guessLabel));
+        styleButton(yesBtn);
+        styleButton(noBtn);
+        styleButton(idkBtn);
 
-        VBox root = new VBox(15, questionLabel, guessLabel,
-                yesBtn, noBtn, idkBtn);
-        root.setStyle("-fx-padding: 30; -fx-alignment: center;");
+        yesBtn.setOnAction(e -> handleAnswer(true, questionLabel, guessLabel));
+        noBtn.setOnAction(e -> handleAnswer(false, questionLabel, guessLabel));
+        idkBtn.setOnAction(e -> handleAnswer(null, questionLabel, guessLabel));
 
-        stage.setScene(new Scene(root, 450, 300));
-        nextQuestion(questionLabel);
+        // Content now only has the question bubble, buttons, and confidence text
+        content.getChildren().addAll(questionLabel, yesBtn, noBtn, idkBtn, guessLabel);
+        root.getChildren().add(content);
+
+        stage.setScene(new Scene(root, 800, 650));
+        updateNextQuestion(questionLabel);
     }
 
-    private void nextQuestion(Label questionLabel) {
+    private void updateNextQuestion(Label qLabel) {
         if (engine.finished()) {
             showEndScreen();
             return;
         }
-
         currentQuestion = engine.nextQuestion();
-        if (currentQuestion != null) {
-            questionLabel.setText(currentQuestion.text);
-        }
+        if (currentQuestion != null) qLabel.setText(currentQuestion.text);
     }
 
-    private void answer(Boolean ans, Label questionLabel, Label guessLabel) {
+    private void handleAnswer(Boolean ans, Label qLabel, Label gLabel) {
         engine.answer(currentQuestion, ans);
-
         Person guess = engine.bestGuess();
         if (guess != null) {
-            guessLabel.setText(
-                "Current Guess: " + guess.name +
-                " (" + engine.bestConfidence() + "%)"
-            );
+            gLabel.setText("Thinking: " + guess.name + " (" + engine.bestConfidence() + "%)");
         }
-
-        nextQuestion(questionLabel);
+        updateNextQuestion(qLabel);
     }
 
     /* =======================
             END SCENE
        ======================= */
     private void showEndScreen() {
+        StackPane root = createBaseLayout();
+        VBox content = new VBox(20);
+        content.setAlignment(Pos.CENTER);
+
         Person guess = engine.bestGuess();
+        int conf = engine.bestConfidence();
 
-        Label result = new Label(
-            "I guess: " + guess.name + "\nConfidence: " +
-            engine.bestConfidence() + "%"
-        );
-        result.setStyle("-fx-font-size: 16px;");
+        Label resultLabel = new Label();
+        resultLabel.setWrapText(true);
+        resultLabel.setMaxWidth(500);
+        resultLabel.setStyle("-fx-background-color: white; -fx-background-radius: 20; " +
+                             "-fx-padding: 30; -fx-font-size: 22px; -fx-font-weight: bold; -fx-text-alignment: center;");
 
-        Button correctBtn = new Button("Correct!");
-        Button wrongBtn = new Button("Wrong");
-        Button menuBtn = new Button("Back to Menu");
+        if (conf <= 10 || guess == null) {
+            resultLabel.setText("I'm stumped! I don't know who you are thinking of.\n\nWould you like to teach me?");
+            Button addBtn = new Button("Yes, I'll Teach You!");
+            Button menuBtn = new Button("No, Back to Menu");
+            styleButton(addBtn); styleButton(menuBtn);
+            addBtn.setOnAction(e -> showAddCharacter());
+            menuBtn.setOnAction(e -> showMenu());
+            content.getChildren().addAll(resultLabel, addBtn, menuBtn);
+        } else {
+            resultLabel.setText("I guess: " + guess.name + "!\nAm I correct?");
+            Button correctBtn = new Button("Yes, You Got It!");
+            Button wrongBtn = new Button("No, You're Wrong");
+            Button menuBtn = new Button("Back to Menu");
+            styleButton(correctBtn); styleButton(wrongBtn); styleButton(menuBtn);
 
-        correctBtn.setOnAction(e -> showMenu());
-        wrongBtn.setOnAction(e -> showAddCharacter());
-        menuBtn.setOnAction(e -> showMenu());
+            correctBtn.setOnAction(e -> {
+                resultLabel.setText("I knew it! I am the best!");
+                content.getChildren().removeAll(correctBtn, wrongBtn);
+            });
 
-        VBox root = new VBox(15, result, correctBtn, wrongBtn, menuBtn);
-        root.setStyle("-fx-padding: 30; -fx-alignment: center;");
+            wrongBtn.setOnAction(e -> showAddCharacter());
+            menuBtn.setOnAction(e -> showMenu());
+            content.getChildren().addAll(resultLabel, correctBtn, wrongBtn, menuBtn);
+        }
 
-        stage.setScene(new Scene(root, 450, 300));
+        root.getChildren().add(content);
+        stage.setScene(new Scene(root, 800, 650));
     }
 
     /* =======================
         ADD CHARACTER SCENE
        ======================= */
     private void showAddCharacter() {
-        TextField nameField = new TextField();
-        nameField.setPromptText("Character Name");
+        VBox content = new VBox(15);
+        content.setAlignment(Pos.CENTER);
+        content.setStyle("-fx-background-color: #222; -fx-padding: 30;");
 
-        VBox questionBox = new VBox(5);
+        Label title = new Label("Add New Character");
+        title.setStyle("-fx-text-fill: white; -fx-font-size: 20px;");
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Enter Name...");
+        nameField.setMaxWidth(300);
+
+        VBox qList = new VBox(10);
         Map<Question, ComboBox<String>> inputs = new HashMap<>();
 
         for (Question q : questions) {
+            HBox row = new HBox(10);
+            row.setAlignment(Pos.CENTER_LEFT);
+            Label qL = new Label(q.text);
+            qL.setStyle("-fx-text-fill: white;");
             ComboBox<String> cb = new ComboBox<>();
             cb.getItems().addAll("Yes", "No", "I don't know");
             cb.setValue("I don't know");
-
             inputs.put(q, cb);
-            questionBox.getChildren().addAll(new Label(q.text), cb);
+            row.getChildren().addAll(cb, qL);
+            qList.getChildren().add(row);
         }
 
-        Button saveBtn = new Button("Save Character");
-        Button cancelBtn = new Button("Cancel");
+        ScrollPane scroll = new ScrollPane(qList);
+        scroll.setFitToWidth(true);
+        scroll.setPrefHeight(300);
+        scroll.setStyle("-fx-background: #333; -fx-border-color: #333;");
 
+        Button saveBtn = new Button("Save Character");
+        styleButton(saveBtn);
         saveBtn.setOnAction(e -> {
             try {
                 saveCharacter(nameField.getText(), inputs);
                 showMenu();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            } catch (Exception ex) { ex.printStackTrace(); }
         });
 
+        Button cancelBtn = new Button("Cancel");
+        styleButton(cancelBtn);
         cancelBtn.setOnAction(e -> showMenu());
 
-        ScrollPane scroll = new ScrollPane(questionBox);
-        scroll.setFitToWidth(true);
-
-        VBox root = new VBox(10, nameField, scroll, saveBtn, cancelBtn);
-        root.setStyle("-fx-padding: 20;");
-
-        stage.setScene(new Scene(root, 500, 500));
+        content.getChildren().addAll(title, nameField, scroll, saveBtn, cancelBtn);
+        stage.setScene(new Scene(content, 800, 650));
     }
 
-    private void saveCharacter(String name, Map<Question, ComboBox<String>> inputs)
-            throws IOException {
-
+    private void saveCharacter(String name, Map<Question, ComboBox<String>> inputs) throws IOException {
         Map<String, Boolean> answers = new HashMap<>();
-
-        for (Map.Entry<Question, ComboBox<String>> entry : inputs.entrySet()) {
+        for (var entry : inputs.entrySet()) {
             String val = entry.getValue().getValue();
-            Boolean ans = null;
-            if (val.equals("Yes")) ans = true;
-            else if (val.equals("No")) ans = false;
-
+            Boolean ans = val.equals("Yes") ? true : (val.equals("No") ? false : null);
             answers.put(entry.getKey().key, ans);
         }
-
         people.add(new Person(name, answers));
         DataLoader.savePeople("people.txt", people);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { 
         launch();
-    }
+     }
 }

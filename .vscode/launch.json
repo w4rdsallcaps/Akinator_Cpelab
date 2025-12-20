@@ -11,6 +11,7 @@
             "mainClass": "App",
             "projectName": "Akinator_Cpelab_beaaa5a4",
             "vmArgs": "--module-path \"C:\\Users\\w4rds\\Desktop\\javafx-sdk-17.0.17\\lib\" --add-modules javafx.controls,javafx.fxml",
+            
         },
     ]
 }
